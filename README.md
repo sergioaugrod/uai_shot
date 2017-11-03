@@ -1,6 +1,6 @@
 # UaiShot
 
-Example of a multiplayer game of ships built with Elixir and Phaser.
+A multiplayer game of ships built with Elixir and Phaser.
 
 ## Prerequisites
 
