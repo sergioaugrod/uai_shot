@@ -13,7 +13,7 @@ You will need the following things properly installed on your computer:
 Execute the following commands to install dependencies and init project:
 
 ```bash
-$ cd uai_shoot
+$ cd uai_shot
 $ mix deps.get
 $ iex -S mix phx.server
 ```
