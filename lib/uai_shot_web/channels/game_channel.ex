@@ -5,7 +5,7 @@ defmodule UaiShotWeb.GameChannel do
 
   use Phoenix.Channel
 
-  alias UaiShot.Store.{Bullet, Player}
+  alias UaiShot.Store.{Bullet, Player, Ranking}
   alias Ecto.UUID
 
   def join("game:lobby", _message, socket) do
@@ -52,8 +52,9 @@ defmodule UaiShotWeb.GameChannel do
   end
 
   def terminate(_msg, socket) do
-    socket.assigns.player_id
-    |> Player.delete
+    player_id = socket.assigns.player_id
+    Player.delete(player_id)
+    Ranking.delete(player_id)
 
     broadcast(socket, "update_players", %{players: Player.all})
   end

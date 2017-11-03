@@ -5,13 +5,7 @@ export class Game {
     constructor(engine) {
         this.players = [];
         this.bullets = [];
-
         this.engine = engine;
-        this.channel = null;
-        this.cursors = null;
-        this.shootButton = null;
-        this.playerId = null;
-        this.player = null;
     }
 
     start() {
@@ -29,19 +23,22 @@ export class Game {
 
     create(state) {
         this.engine.add.tileSprite(0, 0, 800, 600, "space");
-        let sprite = this._createShip(400, 30, "ship", 0);
-        sprite.body.collideWorldBounds = true;
 
-        this.player = new Player(sprite);
-        this.cursors = state.input.keyboard.createCursorKeys();
-        this.shootButton = state.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
-
-        this.channel.push("new_player", { x: sprite.x, y: sprite.y, rotation: sprite.rotation });
+        this._setRanking();
+        this._setKeyboard(state);
+        this._createPlayer();
     }
 
     update(state) {
         this.player.update(this.engine, this.cursors, this.shootButton, this.channel);
+        this._updateAlpha();
+    }
 
+    _setRanking() {
+        this.ranking = this.engine.add.text(10, 10, "", { font: "14px Arial", fill: "#fff" });
+    }
+
+    _updateAlpha() {
         for(let id in this.players) {
             let player = this.players[id];
 
@@ -51,6 +48,18 @@ export class Game {
                 player.alpha = 1;
             }
         }
+    }
+
+    _setKeyboard(state) {
+        this.cursors = state.input.keyboard.createCursorKeys();
+        this.shootButton = state.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+    }
+
+    _createPlayer() {
+        let sprite = this._createShip(400, 30, "ship", 0);
+        sprite.body.collideWorldBounds = true;
+        this.player = new Player(sprite);
+        this.channel.push("new_player", { x: sprite.x, y: sprite.y, rotation: sprite.rotation });
     }
 
     _createShip(x, y, type, rotation) {

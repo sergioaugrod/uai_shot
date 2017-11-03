@@ -6,7 +6,7 @@ defmodule UaiShot.Application do
   use Application
 
   alias UaiShot.{GameServer, Repo, Store}
-  alias Store.{Bullet, Player}
+  alias Store.{Bullet, Player, Ranking}
   alias UaiShotWeb.{Endpoint}
 
   # See https://hexdocs.pm/elixir/Application.html
@@ -18,8 +18,9 @@ defmodule UaiShot.Application do
     children = [
       supervisor(Repo, []),
       supervisor(Endpoint, []),
-      worker(Player, []),
       worker(Bullet, []),
+      worker(Player, []),
+      worker(Ranking, []),
       worker(GameServer, [])
     ]
 

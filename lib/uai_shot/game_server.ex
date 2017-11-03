@@ -6,7 +6,7 @@ defmodule UaiShot.GameServer do
 
   use GenServer
 
-  alias UaiShot.Store.{Bullet, Player}
+  alias UaiShot.Store.{Bullet, Player, Ranking}
   alias UaiShotWeb.Endpoint
 
   @worker_interval 20
@@ -49,11 +49,21 @@ defmodule UaiShot.GameServer do
   defp move_bullet(bullet) do
     bullet
     |> hited_players
-    |> Enum.each(&Endpoint.broadcast("game:lobby", "hit_player", %{player_id: &1.id}))
+    |> Enum.each(&process_hit(bullet, &1))
 
     bullet
     |> Map.put(:x, bullet.x + bullet.speed_x)
     |> Map.put(:y, bullet.y + bullet.speed_y)
+  end
+
+  @spec process_hit(Map.t, Map.t) :: :ok
+  defp process_hit(bullet, player) do
+    bullet.player_id
+    |> Ranking.get
+    |> Map.update!(:value, &(&1 + 10))
+    |> Ranking.put
+
+    Endpoint.broadcast("game:lobby", "hit_player", %{player_id: player.id})
   end
 
   @spec bullet_is_far?(Map.t) :: Boolean.t
