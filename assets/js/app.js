@@ -18,4 +18,20 @@
 // Local files can be imported directly using relative
 // paths "./socket" or full ones "web/static/js/socket".
 
-import game from "./game";
+import {Game} from "./game";
+
+let engine = new Phaser.Game(800, 600, Phaser.CANVAS, "phaser", { preload: preload, create: create, update: update });
+let game = new Game(engine);
+game.start();
+
+function preload() {
+    game.preload(this);
+}
+
+function create() {
+    game.create(this);
+}
+
+function update() {
+    game.update(this);
+}

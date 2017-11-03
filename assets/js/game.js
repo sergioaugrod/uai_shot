@@ -1,155 +1,124 @@
+import {Player} from "./player";
 import {Socket} from "phoenix";
 
-let socket = new Socket("/socket", {params: {token: window.userToken}});
-let channel = socket.channel("game:lobby", {});
+export class Game {
+    constructor(engine) {
+        this.players = [];
+        this.bullets = [];
 
-let game = new Phaser.Game(800, 600, Phaser.CANVAS, "phaser", { preload: preload, create: create, update: update });
-
-let cursors;
-let fireButton;
-
-let players = {};
-let bullets = [];
-
-let playerId = null;
-let player = {
-    sprite: null,
-    shoot: false,
-
-    update: function() {
-        if (cursors.up.isDown) {
-            game.physics.arcade.accelerationFromRotation(this.sprite.rotation, 300, this.sprite.body.acceleration);
-        }
-        else {
-            this.sprite.body.acceleration.set(0);
-        }
-
-        if (cursors.left.isDown) {
-            this.sprite.body.angularVelocity = -300;
-        }
-        else if (cursors.right.isDown) {
-            this.sprite.body.angularVelocity = 300;
-        }
-        else {
-            this.sprite.body.angularVelocity = 0;
-        }
-
-        if (fireButton.isDown && !this.shoot) {
-            let speed_x = Math.cos(this.sprite.rotation) * 20;
-            let speed_y = Math.sin(this.sprite.rotation) * 20;
-            this.shoot = true;
-
-            channel.push("shoot_bullet", { x: this.sprite.x,
-                                           y: this.sprite.y,
-                                           rotation: this.sprite.rotation,
-                                           speed_x: speed_x,
-                                           speed_y: speed_y });
-        } else if(this.shoot) {
-            this.shoot = false;
-        }
-
-        if(this.sprite.alpha < 1){
-            this.sprite.alpha += (1 - this.sprite.alpha) * 0.2;
-        } else {
-            this.sprite.alpha = 1;
-        }
-
-        game.world.wrap(this.sprite, 16);
-        channel.push("move_player", { x: this.sprite.x,
-                                      y: this.sprite.y,
-                                      rotation: this.sprite.rotation });
+        this.engine = engine;
+        this.channel = null;
+        this.cursors = null;
+        this.shootButton = null;
+        this.playerId = null;
+        this.player = null;
     }
-};
 
-function preload() {
-    game.load.image("bullet", "images/bullet.png");
-    game.load.image("ship", "images/ship.png");
+    start() {
+        this._connectToLobby();
+        this._updatePlayers();
+        this._updateBullets();
+        this._hitPlayer();
+    }
+
+    preload(state) {
+        this.engine.load.image("bullet", "images/bullet.png");
+        this.engine.load.image("ship", "images/ship.png");
+    }
+
+    create(state) {
+        let sprite = this._createShip(400, 30, "ship", 0);
+        this.player = new Player(sprite);
+        this.cursors = state.input.keyboard.createCursorKeys();
+        this.shootButton = state.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+
+        this.channel.push("new_player", { x: sprite.x, y: sprite.y, rotation: sprite.rotation });
+    }
+
+    update(state) {
+        this.player.update(this.engine, this.cursors, this.shootButton, this.channel);
+
+        for(let id in this.players) {
+            let player = this.players[id];
+
+            if(this.player.alpha < 1) {
+                this.player.alpha += (1 - this.player.alpha) * 0.2;
+            } else {
+                this.player.alpha = 1;
+            }
+        }
+    }
+
+    _createShip(x, y, type, rotation) {
+        let sprite = this.engine.add.sprite(x, y, type);
+        this.engine.physics.arcade.enable(sprite);
+
+        sprite.rotation = rotation;
+        sprite.body.drag.set(70);
+        sprite.body.maxVelocity.set(200);
+
+        return sprite;
+    }
+
+    _updatePlayers() {
+        this.channel.on("update_players", payload => {
+            payload.players.forEach(player => {
+                if(!this.players[player.id] && player.id != this.playerId) {
+                    this.players[player.id] = this._createShip(player.x, player.y, "ship", player.rotation);
+                }
+
+                if (player.id != this.playerId) {
+                    this.players[player.id].x = player.x;
+                    this.players[player.id].y = player.y;
+                    this.players[player.id].rotation = player.rotation;
+                }
+            });
+
+            for(let id in this.players) {
+                if(!payload.players.some(p => p.id == id)) {
+                    this.players[id].destroy();
+                    delete this.players[id];
+                }
+            }
+        });
+    }
+
+    _updateBullets() {
+        this.channel.on("update_bullets", payload => {
+            payload.bullets.forEach((bullet, index) => {
+                if(this.bullets[index]) {
+                    this.bullets[index].x = bullet.x;
+                    this.bullets[index].y = bullet.y;
+                } else {
+                    this.bullets[index] = this.engine.add.sprite(bullet.x, bullet.y, "bullet");
+                }
+            });
+
+            for(let index = payload.bullets.length; index < this.bullets.length; index++){
+                this.bullets[index].destroy();
+                this.bullets.splice(index, 1);
+                index--;
+            }
+        });
+    }
+
+    _hitPlayer() {
+        this.channel.on("hit_player", payload => {
+            if(this.playerId != payload.player_id) {
+                this.players[payload.player_id].alpha = 0;
+            } else {
+                this.player.sprite.alpha = 0;
+            }
+        });
+    }
+
+    _connectToLobby() {
+        let socket = new Socket("/socket", {params: {token: window.userToken}});
+        socket.connect();
+        let channel = socket.channel("game:lobby", {});
+        channel
+            .join()
+            .receive("ok", payload => this.playerId = payload.player_id);
+        this.channel = channel;
+    }
 }
-
-function createShip(x, y, type, rotation) {
-    let sprite = game.add.sprite(x, y, type);
-    game.physics.arcade.enable(sprite);
-
-    sprite.rotation = rotation;
-    sprite.body.drag.set(70);
-    sprite.body.maxVelocity.set(200);
-
-    return sprite;
-}
-
-function create() {
-    let sprite = createShip(400, 30, "ship", 0);
-    player.sprite = sprite;
-
-    cursors = this.input.keyboard.createCursorKeys();
-    fireButton = this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
-
-    channel.push("new_player", { x: sprite.x, y: sprite.y, rotation: sprite.rotation });
-}
-
-function update() {
-    player.update();
-
-    for(let id in players) {
-        let player = players[id];
-
-        if(player.alpha < 1) {
-            player.alpha += (1 - player.alpha) * 0.2;
-        } else {
-            player.alpha = 1;
-        }
-    }
-}
-
-socket.connect();
-
-channel
-    .join()
-    .receive("ok", payload => playerId = payload.player_id);
-
-channel.on("update_players", function(payload){
-    payload.players.forEach(player => {
-        if(!players[player.id] && player.id != playerId) {
-            players[player.id] = createShip(player.x, player.y, "ship", player.rotation);
-        }
-
-        if (player.id != playerId) {
-            players[player.id].x = player.x;
-            players[player.id].y = player.y;
-            players[player.id].rotation = player.rotation;
-        }
-    });
-
-    for(let id in players) {
-        if(!payload.players.some(p => p.id == id)) {
-            players[id].destroy();
-            delete players[id];
-        }
-    }
-});
-
-channel.on("update_bullets", function(payload){
-    payload.bullets.forEach((bullet, index) => {
-        if(bullets[index] == undefined) {
-            bullets[index] = game.add.sprite(bullet.x, bullet.y, "bullet");
-        } else {
-            bullets[index].x = bullet.x;
-            bullets[index].y = bullet.y;
-        }
-    });
-
-    for(let index = payload.bullets.length; index < bullets.length; index++){
-        bullets[index].destroy();
-        bullets.splice(index, 1);
-        index--;
-    }
-});
-
-channel.on("hit_player", function(payload){
-    if(playerId != payload.player_id) {
-        let playerHit = players[payload.player_id];
-        playerHit.alpha = 0;
-    } else {
-        player.sprite.alpha = 0;
-    }
-});
