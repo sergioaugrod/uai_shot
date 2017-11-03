@@ -24,10 +24,14 @@ export class Game {
     preload(state) {
         this.engine.load.image("bullet", "images/bullet.png");
         this.engine.load.image("ship", "images/ship.png");
+        this.engine.load.image("space", "images/space.png");
     }
 
     create(state) {
+        this.engine.add.tileSprite(0, 0, 800, 600, "space");
         let sprite = this._createShip(400, 30, "ship", 0);
+        sprite.body.collideWorldBounds = true;
+
         this.player = new Player(sprite);
         this.cursors = state.input.keyboard.createCursorKeys();
         this.shootButton = state.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
@@ -41,10 +45,10 @@ export class Game {
         for(let id in this.players) {
             let player = this.players[id];
 
-            if(this.player.alpha < 1) {
-                this.player.alpha += (1 - this.player.alpha) * 0.2;
+            if(player.alpha < 1) {
+                player.alpha += (1 - player.alpha) * 0.2;
             } else {
-                this.player.alpha = 1;
+                player.alpha = 1;
             }
         }
     }

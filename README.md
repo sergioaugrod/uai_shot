@@ -1,4 +1,4 @@
-# UaiShot
+# Uai Shot
 
 A multiplayer game of ships built with Elixir and Phaser.
 
@@ -21,6 +21,10 @@ $ iex -S mix phx.server
 ## Usage
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+
+## Game
+
+![Game sample](/assets/static/images/game.png)
 
 ## Contributing
 
