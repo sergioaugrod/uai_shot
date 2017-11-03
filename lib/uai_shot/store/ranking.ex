@@ -39,7 +39,7 @@ defmodule UaiShot.Store.Ranking do
   """
   @spec get(String.t) :: Map.t
   def get(player_id) do
-    Agent.get(__MODULE__, &Map.get(&1, player_id, %{player_id: player_id, value: 0}))
+    Agent.get(__MODULE__, &Map.get(&1, player_id))
   end
 
   @doc """

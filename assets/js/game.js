@@ -24,7 +24,6 @@ export class Game {
     create(state) {
         this.engine.add.tileSprite(0, 0, 800, 600, "space");
 
-        this._setRanking();
         this._setKeyboard(state);
         this._createPlayer();
     }
@@ -32,10 +31,6 @@ export class Game {
     update(state) {
         this.player.update(this.engine, this.cursors, this.shootButton, this.channel);
         this._updateAlpha();
-    }
-
-    _setRanking() {
-        this.ranking = this.engine.add.text(10, 10, "", { font: "14px Arial", fill: "#fff" });
     }
 
     _updateAlpha() {
