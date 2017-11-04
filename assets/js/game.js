@@ -38,6 +38,7 @@ export class Game {
 
     _setRanking() {
         this.ranking = this.engine.add.text(10, 10, "", { font: "14px Arial", fill: "#fff" });
+        this.playersOnline = this.engine.add.text(10, 580, "", { font: "14px Arial", fill: "#F4D03F" });
     }
 
     _updateAlpha() {
@@ -95,6 +96,13 @@ export class Game {
                     this.players[id].destroy();
                     delete this.players[id];
                 }
+            }
+
+            let playersSize = Object.keys(this.players).length + 1;
+            if(playersSize > 1) {
+                this.playersOnline.text = `${playersSize} players online`;
+            } else {
+                this.playersOnline.text = `1 player online`;
             }
         });
     }
