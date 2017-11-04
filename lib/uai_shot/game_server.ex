@@ -58,12 +58,19 @@ defmodule UaiShot.GameServer do
 
   @spec process_hit(Map.t, Map.t) :: :ok
   defp process_hit(bullet, player) do
-    bullet.player_id
-    |> Ranking.get
-    |> Map.update!(:value, &(&1 + 10))
-    |> Ranking.put
+    update_ranking(bullet.player_id, 10)
+    update_ranking(player.id, -10)
 
+    Endpoint.broadcast("game:lobby", "update_ranking", %{ranking: Ranking.all()})
     Endpoint.broadcast("game:lobby", "hit_player", %{player_id: player.id})
+  end
+
+  @spec update_ranking(String.t, Integer.t) :: :ok
+  defp update_ranking(player_id, value) do
+    player_id
+    |> Ranking.get
+    |> Map.update!(:value, &(&1 + value))
+    |> Ranking.put
   end
 
   @spec bullet_is_far?(Map.t) :: Boolean.t

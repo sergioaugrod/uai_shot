@@ -22,7 +22,7 @@ defmodule UaiShot.Store.Ranking do
       players
       |> Map.to_list
       |> Enum.map(&elem(&1, 1))
-      |> Enum.sort_by(&(&1.value))
+      |> Enum.sort(&(&1.value > &2.value))
     end)
   end
 

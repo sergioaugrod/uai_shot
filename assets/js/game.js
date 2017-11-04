@@ -2,17 +2,19 @@ import {Player} from "./player";
 import {Socket} from "phoenix";
 
 export class Game {
-    constructor(engine) {
+    constructor(engine, nickname) {
         this.players = [];
         this.bullets = [];
+        this.nickname = nickname;
         this.engine = engine;
     }
 
     start() {
         this._connectToLobby();
-        this._updatePlayers();
-        this._updateBullets();
+        this._updateRanking();
         this._hitPlayer();
+        this._updateBullets();
+        this._updatePlayers();
     }
 
     preload(state) {
@@ -24,6 +26,7 @@ export class Game {
     create(state) {
         this.engine.add.tileSprite(0, 0, 800, 600, "space");
 
+        this._setRanking();
         this._setKeyboard(state);
         this._createPlayer();
     }
@@ -31,6 +34,10 @@ export class Game {
     update(state) {
         this.player.update(this.engine, this.cursors, this.shootButton, this.channel);
         this._updateAlpha();
+    }
+
+    _setRanking() {
+        this.ranking = this.engine.add.text(10, 10, "", { font: "14px Arial", fill: "#fff" });
     }
 
     _updateAlpha() {
@@ -52,9 +59,10 @@ export class Game {
 
     _createPlayer() {
         let sprite = this._createShip(400, 30, "ship", 0);
+        let nickname = this.nickname || this.playerId;
         sprite.body.collideWorldBounds = true;
         this.player = new Player(sprite);
-        this.channel.push("new_player", { x: sprite.x, y: sprite.y, rotation: sprite.rotation });
+        this.channel.push("new_player", { x: sprite.x, y: sprite.y, rotation: sprite.rotation, nickname: nickname });
     }
 
     _createShip(x, y, type, rotation) {
@@ -107,6 +115,21 @@ export class Game {
                 this.bullets.splice(index, 1);
                 index--;
             }
+        });
+    }
+
+    _updateRanking() {
+        this.channel.on("update_ranking", payload => {
+            let rankingText = payload.ranking
+                .map(position => {
+                    if(position.player_id == this.playerId) {
+                        return `${position.nickname}: ${position.value} (me)`;
+                    } else {
+                        return `${position.nickname}: ${position.value}`;
+                    }
+                }).join("\n");
+
+            this.ranking.text = rankingText;
         });
     }
 

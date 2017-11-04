@@ -18,15 +18,16 @@ defmodule UaiShotWeb.GameChannel do
   end
 
   def handle_in("new_player", state, socket) do
+    state = format_state(state)
     state
-    |> format_state
     |> Map.put(:id, socket.assigns.player_id)
     |> Player.put
 
-    Ranking.put(%{player_id: socket.assigns.player_id, value: 0})
+    Ranking.put(%{player_id: socket.assigns.player_id, nickname: state.nickname, value: 0})
 
     broadcast(socket, "update_players", %{players: Player.all})
     broadcast(socket, "update_bullets", %{bullets: Bullet.all})
+    broadcast(socket, "update_ranking", %{ranking: Ranking.all})
 
     {:noreply, socket}
   end
@@ -59,6 +60,7 @@ defmodule UaiShotWeb.GameChannel do
     Ranking.delete(player_id)
 
     broadcast(socket, "update_players", %{players: Player.all})
+    broadcast(socket, "update_ranking", %{ranking: Ranking.all})
   end
 
   @spec format_state(Map.t) :: Map.t
