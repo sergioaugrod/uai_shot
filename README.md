@@ -1,12 +1,13 @@
 # Uai Shot
 
-A multiplayer game of ships built with Elixir and Phaser.
+A multiplayer game of ships built with Elixir(Phoenix Framework) and Javascript(Phaser).
 
 ## Prerequisites
 
 You will need the following things properly installed on your computer:
 
 * [Elixir 1.5](https://github.com/elixir-lang/elixir)
+* [Node.js](https://github.com/nodejs/node)
 
 ## Instalation
 
@@ -14,7 +15,8 @@ Execute the following commands to install dependencies and init project:
 
 ```bash
 $ cd uai_shot
-$ mix deps.get
+$ cd assets; npm install
+$ cd ..; mix deps.get
 $ iex -S mix phx.server
 ```
 
