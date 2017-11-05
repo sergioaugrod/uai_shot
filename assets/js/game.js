@@ -59,10 +59,9 @@ export class Game {
 
     _createPlayer() {
         let sprite = this._createShip(400, 30, "ship", 0);
-        let nickname = this.nickname || this.playerId;
         sprite.body.collideWorldBounds = true;
         this.player = new Player(sprite);
-        this.channel.push("new_player", { x: sprite.x, y: sprite.y, rotation: sprite.rotation, nickname: nickname });
+        this.channel.push("new_player", { x: sprite.x, y: sprite.y, rotation: sprite.rotation });
     }
 
     _createShip(x, y, type, rotation) {
@@ -155,7 +154,7 @@ export class Game {
     }
 
     _connectToLobby() {
-        let socket = new Socket("/socket", {params: {token: window.userToken}});
+        let socket = new Socket("/socket", { params: { nickname: this.nickname } });
         socket.connect();
         let channel = socket.channel("game:lobby", {});
         channel

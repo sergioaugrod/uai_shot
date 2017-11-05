@@ -38,7 +38,7 @@ defmodule UaiShot.Store.Player do
   """
   @spec get(String.t) :: Map.t
   def get(player_id) do
-    Agent.get(__MODULE__, &Map.get(&1, player_id))
+    Agent.get(__MODULE__, &Map.get(&1, player_id, %{id: player_id, nickname: player_id}))
   end
 
   @doc """

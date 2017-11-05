@@ -6,11 +6,9 @@ defmodule UaiShotWeb.GameChannel do
   use Phoenix.Channel
 
   alias UaiShot.Store.{Bullet, Player, Ranking}
-  alias Ecto.UUID
 
   def join("game:lobby", _message, socket) do
-    player_id = UUID.generate()
-    {:ok, %{player_id: player_id}, assign(socket, :player_id, player_id)}
+    {:ok, %{player_id: socket.assigns.player_id}, socket}
   end
 
   def join("game:" <> _private_game_id, _params, _socket) do
@@ -19,11 +17,15 @@ defmodule UaiShotWeb.GameChannel do
 
   def handle_in("new_player", state, socket) do
     state = format_state(state)
+    nickname = socket.assigns.nickname
+    player_id = socket.assigns.player_id
+
     state
-    |> Map.put(:id, socket.assigns.player_id)
+    |> Map.put(:id, player_id)
+    |> Map.put(:nickname, nickname)
     |> Player.put
 
-    Ranking.put(%{player_id: socket.assigns.player_id, nickname: state.nickname, value: 0})
+    Ranking.put(%{player_id: socket.assigns.player_id, nickname: nickname, value: 0})
 
     broadcast(socket, "update_players", %{players: Player.all})
     broadcast(socket, "update_bullets", %{bullets: Bullet.all})
@@ -36,6 +38,7 @@ defmodule UaiShotWeb.GameChannel do
     state
     |> format_state
     |> Map.put(:id, socket.assigns.player_id)
+    |> Map.put(:nickname, socket.assigns.nickname)
     |> Player.put
 
     broadcast(socket, "update_players", %{players: Player.all})
