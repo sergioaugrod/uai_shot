@@ -15,7 +15,6 @@ export class Game {
         this._hitPlayer();
         this._updateBullets();
         this._updatePlayers();
-        this._updateRanking();
     }
 
     preload(state) {
@@ -26,8 +25,7 @@ export class Game {
 
     create(state) {
         this.engine.add.tileSprite(0, 0, 800, 600, "space");
-
-        this._setRanking();
+        this._setTexts();
         this._setKeyboard(state);
         this._createPlayer();
     }
@@ -37,7 +35,7 @@ export class Game {
         this._updateAlpha();
     }
 
-    _setRanking() {
+    _setTexts() {
         this.ranking = this.engine.add.text(10, 10, "", { font: "14px Arial", fill: "#fff" });
         this.playersOnline = this.engine.add.text(10, 580, "", { font: "14px Arial", fill: "#F4D03F" });
     }
@@ -98,10 +96,12 @@ export class Game {
                     delete this.players[id];
                 }
             }
+
+            this._updatePlayersOnline();
         });
     }
 
-    _updateRanking() {
+    _updatePlayersOnline() {
         let playersSize = Object.keys(this.players).length + 1;
         if(playersSize > 1) {
             this.playersOnline.text = `${playersSize} players online`;
