@@ -15,6 +15,7 @@ export class Game {
         this._hitPlayer();
         this._updateBullets();
         this._updatePlayers();
+        this._updateRanking();
     }
 
     preload(state) {
@@ -97,14 +98,16 @@ export class Game {
                     delete this.players[id];
                 }
             }
-
-            let playersSize = Object.keys(this.players).length + 1;
-            if(playersSize > 1) {
-                this.playersOnline.text = `${playersSize} players online`;
-            } else {
-                this.playersOnline.text = `1 player online`;
-            }
         });
+    }
+
+    _updateRanking() {
+        let playersSize = Object.keys(this.players).length + 1;
+        if(playersSize > 1) {
+            this.playersOnline.text = `${playersSize} players online`;
+        } else {
+            this.playersOnline.text = `1 player online`;
+        }
     }
 
     _updateBullets() {
