@@ -9,18 +9,23 @@ You will need the following things properly installed on your computer:
 * [Elixir 1.5](https://github.com/elixir-lang/elixir)
 * [Node.js](https://github.com/nodejs/node)
 
-## Instalation
+## Installation
 
-Execute the following commands to install dependencies and init project:
+Execute the following commands to install dependencies:
 
 ```bash
 $ cd uai_shot
 $ cd assets; npm install
 $ cd ..; mix deps.get
-$ iex -S mix phx.server
 ```
 
 ## Usage
+
+Init project:
+
+```bash
+$ iex -S mix phx.server
+```
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
