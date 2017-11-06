@@ -8,12 +8,3 @@ config :uai_shot, UaiShotWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
-
-# Configure your database
-config :uai_shot, UaiShot.Repo,
-  adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
-  database: "uai_shot_test",
-  hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox

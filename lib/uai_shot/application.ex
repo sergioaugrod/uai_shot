@@ -5,7 +5,7 @@ defmodule UaiShot.Application do
 
   use Application
 
-  alias UaiShot.{GameServer, Repo, Store}
+  alias UaiShot.{GameServer, Store}
   alias Store.{Bullet, Player, Ranking}
   alias UaiShotWeb.{Endpoint}
 
@@ -16,7 +16,6 @@ defmodule UaiShot.Application do
 
     # Define workers and child supervisors to be supervised
     children = [
-      supervisor(Repo, []),
       supervisor(Endpoint, []),
       worker(Bullet, []),
       worker(Player, []),

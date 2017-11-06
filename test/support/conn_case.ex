@@ -25,14 +25,4 @@ defmodule UaiShotWeb.ConnCase do
       @endpoint UaiShotWeb.Endpoint
     end
   end
-
-
-  setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(UaiShot.Repo)
-    unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(UaiShot.Repo, {:shared, self()})
-    end
-    {:ok, conn: Phoenix.ConnTest.build_conn()}
-  end
-
 end

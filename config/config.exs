@@ -5,10 +5,6 @@
 # is restricted to this project.
 use Mix.Config
 
-# General application configuration
-config :uai_shot,
-  ecto_repos: [UaiShot.Repo]
-
 # Configures the endpoint
 config :uai_shot, UaiShotWeb.Endpoint,
   url: [host: "localhost"],

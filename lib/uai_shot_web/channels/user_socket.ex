@@ -1,8 +1,6 @@
 defmodule UaiShotWeb.UserSocket do
   use Phoenix.Socket
 
-  alias Ecto.UUID
-
   ## Channels
   # channel "room:*", UaiShotWeb.RoomChannel
   channel "game:lobby", UaiShotWeb.GameChannel
@@ -12,7 +10,7 @@ defmodule UaiShotWeb.UserSocket do
   # transport :longpoll, Phoenix.Transports.LongPoll
 
   def connect(params, socket) do
-    player_id = UUID.generate()
+    player_id = UUID.uuid4()
     nickname = params["nickname"]
 
     nickname = if nickname && String.first(nickname) do

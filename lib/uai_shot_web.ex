@@ -22,7 +22,6 @@ defmodule UaiShotWeb do
       use Phoenix.Controller, namespace: UaiShotWeb
       import Plug.Conn
       import UaiShotWeb.Router.Helpers
-      import UaiShotWeb.Gettext
     end
   end
 
@@ -38,8 +37,6 @@ defmodule UaiShotWeb do
       use Phoenix.HTML
 
       import UaiShotWeb.Router.Helpers
-      import UaiShotWeb.ErrorHelpers
-      import UaiShotWeb.Gettext
     end
   end
 
@@ -54,7 +51,6 @@ defmodule UaiShotWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import UaiShotWeb.Gettext
     end
   end
 
