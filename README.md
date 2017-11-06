@@ -15,8 +15,8 @@ Execute the following commands to install dependencies:
 
 ```bash
 $ cd uai_shot
-$ cd assets; npm install
-$ cd ..; mix deps.get
+$ mix deps.get
+$ (cd assets; npm install)
 ```
 
 ## Usage
