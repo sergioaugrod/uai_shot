@@ -25,7 +25,9 @@ defmodule UaiShotWeb.GameChannel do
     |> Map.put(:nickname, nickname)
     |> Player.put
 
-    Ranking.put(%{player_id: socket.assigns.player_id, nickname: nickname, value: 0})
+    Ranking.put(%{player_id: socket.assigns.player_id,
+                  nickname: nickname,
+                  value: 0})
 
     broadcast(socket, "update_players", %{players: Player.all})
     broadcast(socket, "update_bullets", %{bullets: Bullet.all})

@@ -38,7 +38,7 @@ defmodule UaiShot.Store.Player do
   """
   @spec get(String.t) :: Map.t
   def get(player_id) do
-    Agent.get(__MODULE__, &Map.get(&1, player_id, %{id: player_id, nickname: player_id}))
+    Agent.get(__MODULE__, &Map.get(&1, player_id, default_attrs(player_id)))
   end
 
   @doc """
@@ -47,5 +47,10 @@ defmodule UaiShot.Store.Player do
   @spec delete(String.t) :: :ok
   def delete(player_id) do
     Agent.update(__MODULE__, &Map.delete(&1, player_id))
+  end
+
+  @spec default_attrs(String.t) :: Map.t
+  defp default_attrs(player_id) do
+    %{id: player_id, nickname: player_id}
   end
 end

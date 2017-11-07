@@ -10,15 +10,8 @@ defmodule UaiShotWeb.UserSocket do
   # transport :longpoll, Phoenix.Transports.LongPoll
 
   def connect(params, socket) do
-    player_id = UUID.uuid4()
-    nickname = params["nickname"]
-
-    nickname = if nickname && String.first(nickname) do
-      params["nickname"]
-    else
-      player_id
-    end
-
+    player_id = get_player_id(params["player_id"])
+    nickname = get_nickname(params["nickname"])
     socket =
       socket
       |> assign(:nickname, nickname)
@@ -28,4 +21,14 @@ defmodule UaiShotWeb.UserSocket do
   end
 
   def id(socket), do: "users_socket:#{socket.assigns.player_id}"
+
+  @spec get_player_id(String.t) :: String.t
+  defp get_player_id(player_id) do
+    if player_id, do: player_id, else: UUID.uuid4()
+  end
+
+  @spec get_nickname(String.t) :: String.t
+  defp get_nickname(nickname) do
+    if nickname && String.first(nickname), do: nickname, else: UUID.uuid4()
+  end
 end
