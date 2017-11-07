@@ -5,6 +5,7 @@ export class Game {
     constructor(engine, nickname) {
         this.players = [];
         this.bullets = [];
+        this.playerId = null;
         this.nickname = nickname;
         this.engine = engine;
     }
@@ -154,7 +155,7 @@ export class Game {
     }
 
     _connectToLobby() {
-        let socket = new Socket("/socket", { params: { nickname: this.nickname } });
+        let socket = new Socket("/socket", { params: { nickname: this.nickname, player_id: this.playerId } });
         socket.connect();
         let channel = socket.channel("game:lobby", {});
         channel
