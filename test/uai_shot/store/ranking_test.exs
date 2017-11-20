@@ -1,17 +1,12 @@
 defmodule UaiShot.Store.RankingTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case
 
   alias UaiShot.Store.{Player, Ranking}
 
-  setup_all do
-    Player.start_link()
-    Ranking.start_link()
-    :ok
-  end
-
   setup do
     ranking = %{player_id: 1, nickname: "Bruce", value: 0}
-    Ranking.delete(ranking.player_id)
+    Player.clean()
+    Ranking.clean()
     [ranking: ranking]
   end
 
@@ -56,6 +51,13 @@ defmodule UaiShot.Store.RankingTest do
       Ranking.put(ranking)
       Ranking.delete(ranking.player_id)
       assert Ranking.get(ranking.player_id) == %{player_id: 1, nickname: 1, value: 0}
+    end
+  end
+
+  describe "clean/0" do
+    test "clean ranking positions" do
+      Ranking.clean()
+      assert Ranking.all() == []
     end
   end
 end

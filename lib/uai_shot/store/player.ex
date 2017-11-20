@@ -49,6 +49,14 @@ defmodule UaiShot.Store.Player do
     Agent.update(__MODULE__, &Map.delete(&1, player_id))
   end
 
+  @doc """
+  Clean players.
+  """
+  @spec clean() :: :ok
+  def clean() do
+    Agent.update(__MODULE__, fn _ -> %{} end)
+  end
+
   @spec default_attrs(String.t) :: Map.t
   defp default_attrs(player_id) do
     %{id: player_id, nickname: player_id}

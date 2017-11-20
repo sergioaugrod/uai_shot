@@ -52,6 +52,14 @@ defmodule UaiShot.Store.Ranking do
     Agent.update(__MODULE__, &Map.delete(&1, player_id))
   end
 
+  @doc """
+  Clean ranking positions.
+  """
+  @spec clean() :: :ok
+  def clean() do
+    Agent.update(__MODULE__, fn _ -> %{} end)
+  end
+
   @spec default_attrs(String.t) :: Map.t
   defp default_attrs(player_id) do
     nickname = Player.get(player_id).nickname

@@ -1,21 +1,16 @@
 defmodule UaiShot.Engine.BattleTest do
-  use UaiShotWeb.ChannelCase, async: true
+  use UaiShotWeb.ChannelCase
 
   alias UaiShot.Engine.Battle
   alias UaiShotWeb.GameChannel
   alias UaiShot.Store.{Bullet, Player, Ranking}
 
-  setup_all do
-    Bullet.start_link()
-    Player.start_link()
-    Ranking.start_link()
-    :ok
-  end
-
   setup do
     Bullet.reset([])
+    Player.clean()
+    Ranking.clean()
 
-    {:ok, _, socket} = socket("player_id", %{player_id: 1})
+    {:ok, _, socket} = socket("1", %{player_id: 1})
     |> subscribe_and_join(GameChannel, "game:lobby")
 
     [socket: socket]

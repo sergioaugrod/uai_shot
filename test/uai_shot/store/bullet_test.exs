@@ -1,12 +1,7 @@
 defmodule UaiShot.Store.BulletTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case
 
   alias UaiShot.Store.Bullet
-
-  setup_all do
-    Bullet.start_link()
-    :ok
-  end
 
   setup do
     Bullet.reset([])

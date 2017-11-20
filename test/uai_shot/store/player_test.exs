@@ -1,16 +1,11 @@
 defmodule UaiShot.Store.PlayerTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case
 
   alias UaiShot.Store.Player
 
-  setup_all do
-    Player.start_link()
-    :ok
-  end
-
   setup do
     player = %{id: 1, nickname: "John", x: 1, y: 2, rotation: 1}
-    Player.delete(player.id)
+    Player.clean()
     [player: player]
   end
 
@@ -55,6 +50,13 @@ defmodule UaiShot.Store.PlayerTest do
       Player.put(player)
       Player.delete(player.id)
       assert Player.get(player.id) == %{id: 1, nickname: 1}
+    end
+  end
+
+  describe "clean/0" do
+    test "clean players" do
+      Player.clean()
+      assert Player.all() == []
     end
   end
 end
