@@ -3,8 +3,13 @@ defmodule UaiShot.Store.BulletTest do
 
   alias UaiShot.Store.Bullet
 
-  setup do
+  setup_all do
     Bullet.start_link()
+    :ok
+  end
+
+  setup do
+    Bullet.reset([])
     :ok
   end
 
@@ -17,7 +22,6 @@ defmodule UaiShot.Store.BulletTest do
       bullet = %{player_id: 1, x: 1, y: 2, rotation: 1, speed_x: 1, speed_y: 2}
       Bullet.push(bullet)
       assert Bullet.all() == [bullet]
-      Bullet.reset([])
     end
   end
 
@@ -37,7 +41,6 @@ defmodule UaiShot.Store.BulletTest do
       Bullet.push(bullet)
       Bullet.push(bullet2)
       assert Bullet.all() == [bullet, bullet2]
-      Bullet.reset([])
     end
   end
 end
