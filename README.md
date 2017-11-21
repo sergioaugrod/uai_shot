@@ -1,6 +1,6 @@
 # Uai Shot
 
-A multiplayer ships game built with Elixir, Phoenix Framework and Phaser.
+A multiplayer ship game built with Elixir, Phoenix Framework and Phaser.
 
 ## Prerequisites
 
