@@ -1,4 +1,4 @@
-# Uai Shot
+# Uai Shot [![Build Status](https://travis-ci.org/sergioaugrod/uai_shot.svg?branch=master)](https://travis-ci.org/sergioaugrod/uai_shot)
 
 A multiplayer ship game built with Elixir, Phoenix Framework and Phaser.
 
