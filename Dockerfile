@@ -17,11 +17,11 @@ RUN mkdir /opt/uai_shot
 ADD . /opt/uai_shot
 WORKDIR /opt/uai_shot
 
-# Install assets deps
+# Install deps
+RUN mix do deps.get
 RUN (cd assets; npm install)
 RUN (cd assets; node node_modules/brunch/bin/brunch build)
 
-RUN mix do deps.get
 RUN mix phx.digest
 
 CMD mix phx.server
