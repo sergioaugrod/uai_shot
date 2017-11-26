@@ -13,9 +13,9 @@ RUN curl -sL https://deb.nodesource.com/setup_6.x -o nodesource_setup.sh
 RUN bash nodesource_setup.sh
 RUN apt-get install nodejs
 
-RUN mkdir /app
-ADD . /app
-WORKDIR /app
+RUN mkdir /opt/uai_shot
+ADD . /opt/uai_shot
+WORKDIR /opt/uai_shot
 
 # Install assets deps
 RUN (cd assets; npm install)
