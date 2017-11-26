@@ -22,8 +22,8 @@ RUN (cd assets; npm install)
 RUN (cd assets; node node_modules/brunch/bin/brunch build)
 
 RUN mix do deps.get
-RUN mix phoenix.digest
+RUN mix phx.digest
 
-CMD mix phoenix.server
+CMD mix phx.server
 
 EXPOSE 4000
