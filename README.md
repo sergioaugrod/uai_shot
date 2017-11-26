@@ -33,6 +33,10 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 ![Game sample](/assets/static/images/game.png)
 
+## Running in your server
+
+Uses the [Dockerfile](https://github.com/sergioaugrod/uai_shot_dockerfile).
+
 ## Contributing
 
 1. Clone it!
