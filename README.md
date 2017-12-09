@@ -2,6 +2,10 @@
 
 A multiplayer ship game built with Elixir, Phoenix Framework and Phaser.
 
+## Demo
+
+<https://uaishot.gigalixirapp.com>
+
 ## Prerequisites
 
 You will need the following things properly installed on your computer:
@@ -27,7 +31,7 @@ Init project:
 $ iex -S mix phx.server
 ```
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+Now you can visit <http://localhost:4000> from your browser.
 
 ## Game
 
