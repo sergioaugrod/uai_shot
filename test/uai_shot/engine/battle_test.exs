@@ -2,16 +2,17 @@ defmodule UaiShot.Engine.BattleTest do
   use UaiShotWeb.ChannelCase
 
   alias UaiShot.Engine.Battle
-  alias UaiShotWeb.GameChannel
   alias UaiShot.Store.{Bullet, Player, Ranking}
+  alias UaiShotWeb.GameChannel
 
   setup do
     Bullet.reset([])
     Player.clean()
     Ranking.clean()
 
-    {:ok, _, socket} = socket("1", %{player_id: 1})
-    |> subscribe_and_join(GameChannel, "game:lobby")
+    {:ok, _, socket} =
+      socket("1", %{player_id: 1})
+      |> subscribe_and_join(GameChannel, "game:lobby")
 
     [socket: socket]
   end
@@ -19,7 +20,7 @@ defmodule UaiShot.Engine.BattleTest do
   describe "run/0" do
     test "broadcast empty bullets" do
       Battle.run()
-      assert_broadcast "update_bullets", %{bullets: []}
+      assert_broadcast("update_bullets", %{bullets: []})
     end
 
     test "broadcast bullets" do
@@ -27,8 +28,11 @@ defmodule UaiShot.Engine.BattleTest do
       Bullet.push(bullet)
 
       Battle.run()
-      assert_broadcast "update_bullets",
+
+      assert_broadcast(
+        "update_bullets",
         %{bullets: [%{player_id: 1, x: 2, y: 4, rotation: 1, speed_x: 1, speed_y: 2}]}
+      )
     end
 
     test "hit player and update ranking" do
@@ -41,11 +45,17 @@ defmodule UaiShot.Engine.BattleTest do
       Player.put(player)
       Player.put(player2)
 
-      assert_broadcast "update_ranking",
-        %{ranking: [%{nickname: "John", player_id: 1, value: 10},
-                    %{nickname: "Bruce", player_id: 2, value: -10}]}
+      assert_broadcast(
+        "update_ranking",
+        %{
+          ranking: [
+            %{nickname: "John", player_id: 1, value: 10},
+            %{nickname: "Bruce", player_id: 2, value: -10}
+          ]
+        }
+      )
 
-      assert_broadcast "hit_player", %{player_id: 2}
+      assert_broadcast("hit_player", %{player_id: 2})
     end
   end
 end

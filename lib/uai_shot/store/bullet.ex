@@ -16,7 +16,7 @@ defmodule UaiShot.Store.Bullet do
   @doc """
   Return all game bullets.
   """
-  @spec all() :: List.t
+  @spec all() :: List.t()
   def all do
     Agent.get(__MODULE__, fn players -> players end)
   end
@@ -24,7 +24,7 @@ defmodule UaiShot.Store.Bullet do
   @doc """
   Start a new state.
   """
-  @spec reset(List.t) :: :ok
+  @spec reset(List.t()) :: :ok
   def reset(bullets) do
     Agent.update(__MODULE__, fn _ -> bullets end)
   end
@@ -32,7 +32,7 @@ defmodule UaiShot.Store.Bullet do
   @doc """
   Push a bullet to state.
   """
-  @spec push(Map.t) :: :ok
+  @spec push(Map.t()) :: :ok
   def push(bullet) do
     Agent.update(__MODULE__, &List.insert_at(&1, -1, bullet))
   end

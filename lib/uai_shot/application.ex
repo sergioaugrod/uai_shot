@@ -5,8 +5,8 @@ defmodule UaiShot.Application do
 
   use Application
 
-  alias UaiShot.{GameServer, Store}
-  alias Store.{Bullet, Player, Ranking}
+  alias UaiShot.{GameServer}
+  alias UaiShot.Store.{Bullet, Player, Ranking}
   alias UaiShotWeb.{Endpoint}
 
   # See https://hexdocs.pm/elixir/Application.html

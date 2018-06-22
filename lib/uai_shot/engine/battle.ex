@@ -14,15 +14,16 @@ defmodule UaiShot.Engine.Battle do
   """
   @spec run() :: :ok
   def run do
-    bullets = Bullet.all()
-    |> Enum.map(&move_bullet(&1))
-    |> Enum.reject(&bullet_is_far?(&1))
+    bullets =
+      Bullet.all()
+      |> Enum.map(&move_bullet(&1))
+      |> Enum.reject(&bullet_is_far?(&1))
 
     Bullet.reset(bullets)
     Endpoint.broadcast("game:lobby", "update_bullets", %{bullets: bullets})
   end
 
-  @spec move_bullet(Map.t) :: Map.t
+  @spec move_bullet(Map.t()) :: Map.t()
   defp move_bullet(bullet) do
     bullet
     |> hited_players
@@ -33,7 +34,7 @@ defmodule UaiShot.Engine.Battle do
     |> Map.put(:y, bullet.y + bullet.speed_y)
   end
 
-  @spec process_hit(Map.t, Map.t) :: :ok
+  @spec process_hit(Map.t(), Map.t()) :: :ok
   defp process_hit(bullet, player) do
     update_ranking(bullet.player_id, 10)
     update_ranking(player.id, -10)
@@ -42,21 +43,20 @@ defmodule UaiShot.Engine.Battle do
     Endpoint.broadcast("game:lobby", "hit_player", %{player_id: player.id})
   end
 
-  @spec update_ranking(String.t, Integer.t) :: :ok
+  @spec update_ranking(String.t(), Integer.t()) :: :ok
   defp update_ranking(player_id, value) do
     player_id
-    |> Ranking.get
+    |> Ranking.get()
     |> Map.update!(:value, &(&1 + value))
-    |> Ranking.put
+    |> Ranking.put()
   end
 
-  @spec bullet_is_far?(Map.t) :: Boolean.t
+  @spec bullet_is_far?(Map.t()) :: Boolean.t()
   defp bullet_is_far?(bullet) do
-    bullet.x < -10 || bullet.x > @game_width
-    || bullet.y < -10 || bullet.y > @game_height
+    bullet.x < -10 || bullet.x > @game_width || bullet.y < -10 || bullet.y > @game_height
   end
 
-  @spec hited_players(Map.t) :: Enum.t
+  @spec hited_players(Map.t()) :: Enum.t()
   defp hited_players(bullet) do
     Player.all()
     |> Enum.filter(&(bullet.player_id != &1.id))

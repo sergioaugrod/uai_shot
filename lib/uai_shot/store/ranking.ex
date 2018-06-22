@@ -18,11 +18,11 @@ defmodule UaiShot.Store.Ranking do
   @doc """
   Return ranking.
   """
-  @spec all() :: List.t
+  @spec all() :: List.t()
   def all do
     Agent.get(__MODULE__, fn players ->
       players
-      |> Map.to_list
+      |> Map.to_list()
       |> Enum.map(&elem(&1, 1))
       |> Enum.sort(&(&1.value > &2.value))
     end)
@@ -31,7 +31,7 @@ defmodule UaiShot.Store.Ranking do
   @doc """
   Update or insert a ranking position.
   """
-  @spec put(Map.t) :: :ok
+  @spec put(Map.t()) :: :ok
   def put(position) do
     Agent.update(__MODULE__, &Map.put(&1, position.player_id, position))
   end
@@ -39,7 +39,7 @@ defmodule UaiShot.Store.Ranking do
   @doc """
   Get ranking position by player_id.
   """
-  @spec get(String.t) :: Map.t
+  @spec get(String.t()) :: Map.t()
   def get(player_id) do
     Agent.get(__MODULE__, &Map.get(&1, player_id, default_attrs(player_id)))
   end
@@ -47,7 +47,7 @@ defmodule UaiShot.Store.Ranking do
   @doc """
   Delete ranking position by player_id.
   """
-  @spec delete(String.t) :: :ok
+  @spec delete(String.t()) :: :ok
   def delete(player_id) do
     Agent.update(__MODULE__, &Map.delete(&1, player_id))
   end
@@ -56,11 +56,11 @@ defmodule UaiShot.Store.Ranking do
   Clean ranking positions.
   """
   @spec clean() :: :ok
-  def clean() do
+  def clean do
     Agent.update(__MODULE__, fn _ -> %{} end)
   end
 
-  @spec default_attrs(String.t) :: Map.t
+  @spec default_attrs(String.t()) :: Map.t()
   defp default_attrs(player_id) do
     nickname = Player.get(player_id).nickname
     %{player_id: player_id, nickname: nickname, value: 0}

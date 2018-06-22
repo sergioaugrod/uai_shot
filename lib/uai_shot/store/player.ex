@@ -16,11 +16,11 @@ defmodule UaiShot.Store.Player do
   @doc """
   Return all game players.
   """
-  @spec all() :: List.t
+  @spec all() :: List.t()
   def all do
     Agent.get(__MODULE__, fn players ->
       players
-      |> Map.to_list
+      |> Map.to_list()
       |> Enum.map(&elem(&1, 1))
     end)
   end
@@ -28,7 +28,7 @@ defmodule UaiShot.Store.Player do
   @doc """
   Update or insert a player.
   """
-  @spec put(Map.t) :: :ok
+  @spec put(Map.t()) :: :ok
   def put(player) do
     Agent.update(__MODULE__, &Map.put(&1, player.id, player))
   end
@@ -36,7 +36,7 @@ defmodule UaiShot.Store.Player do
   @doc """
   Get player by id.
   """
-  @spec get(String.t) :: Map.t
+  @spec get(String.t()) :: Map.t()
   def get(player_id) do
     Agent.get(__MODULE__, &Map.get(&1, player_id, default_attrs(player_id)))
   end
@@ -44,7 +44,7 @@ defmodule UaiShot.Store.Player do
   @doc """
   Delete player by id.
   """
-  @spec delete(String.t) :: :ok
+  @spec delete(String.t()) :: :ok
   def delete(player_id) do
     Agent.update(__MODULE__, &Map.delete(&1, player_id))
   end
@@ -53,11 +53,11 @@ defmodule UaiShot.Store.Player do
   Clean players.
   """
   @spec clean() :: :ok
-  def clean() do
+  def clean do
     Agent.update(__MODULE__, fn _ -> %{} end)
   end
 
-  @spec default_attrs(String.t) :: Map.t
+  @spec default_attrs(String.t()) :: Map.t()
   defp default_attrs(player_id) do
     %{id: player_id, nickname: player_id}
   end

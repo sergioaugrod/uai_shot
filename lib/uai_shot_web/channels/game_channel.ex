@@ -23,15 +23,13 @@ defmodule UaiShotWeb.GameChannel do
     state
     |> Map.put(:id, player_id)
     |> Map.put(:nickname, nickname)
-    |> Player.put
+    |> Player.put()
 
-    Ranking.put(%{player_id: socket.assigns.player_id,
-                  nickname: nickname,
-                  value: 0})
+    Ranking.put(%{player_id: socket.assigns.player_id, nickname: nickname, value: 0})
 
-    broadcast(socket, "update_players", %{players: Player.all})
-    broadcast(socket, "update_bullets", %{bullets: Bullet.all})
-    broadcast(socket, "update_ranking", %{ranking: Ranking.all})
+    broadcast(socket, "update_players", %{players: Player.all()})
+    broadcast(socket, "update_bullets", %{bullets: Bullet.all()})
+    broadcast(socket, "update_ranking", %{ranking: Ranking.all()})
 
     {:noreply, socket}
   end
@@ -41,9 +39,9 @@ defmodule UaiShotWeb.GameChannel do
     |> format_state
     |> Map.put(:id, socket.assigns.player_id)
     |> Map.put(:nickname, socket.assigns.nickname)
-    |> Player.put
+    |> Player.put()
 
-    broadcast(socket, "update_players", %{players: Player.all})
+    broadcast(socket, "update_players", %{players: Player.all()})
 
     {:noreply, socket}
   end
@@ -52,9 +50,9 @@ defmodule UaiShotWeb.GameChannel do
     state
     |> format_state
     |> Map.put(:player_id, socket.assigns.player_id)
-    |> Bullet.push
+    |> Bullet.push()
 
-    broadcast(socket, "update_bullets", %{bullets: Bullet.all})
+    broadcast(socket, "update_bullets", %{bullets: Bullet.all()})
 
     {:noreply, socket}
   end
@@ -64,11 +62,11 @@ defmodule UaiShotWeb.GameChannel do
     Player.delete(player_id)
     Ranking.delete(player_id)
 
-    broadcast(socket, "update_players", %{players: Player.all})
-    broadcast(socket, "update_ranking", %{ranking: Ranking.all})
+    broadcast(socket, "update_players", %{players: Player.all()})
+    broadcast(socket, "update_ranking", %{ranking: Ranking.all()})
   end
 
-  @spec format_state(Map.t) :: Map.t
+  @spec format_state(Map.t()) :: Map.t()
   defp format_state(state) do
     for {key, val} <- state, into: %{}, do: {String.to_atom(key), val}
   end
