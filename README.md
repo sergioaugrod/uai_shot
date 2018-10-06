@@ -10,7 +10,8 @@ A multiplayer ship game built with Elixir, Phoenix Framework and Phaser.
 
 You will need the following things properly installed on your computer:
 
-* [Elixir 1.6](https://github.com/elixir-lang/elixir)
+* [Elixir 1.7.3](https://github.com/elixir-lang/elixir)
+* [Erlang 21.1](https://www.erlang-solutions.com/resources/download.html)
 * [Node.js](https://github.com/nodejs/node)
 
 ## Installation
