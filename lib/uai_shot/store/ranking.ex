@@ -60,7 +60,6 @@ defmodule UaiShot.Store.Ranking do
     Agent.update(__MODULE__, fn _ -> %{} end)
   end
 
-  @spec default_attrs(String.t()) :: Map.t()
   defp default_attrs(player_id) do
     nickname = Player.get(player_id).nickname
     %{player_id: player_id, nickname: nickname, value: 0}
