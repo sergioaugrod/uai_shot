@@ -4,6 +4,7 @@ defmodule UaiShot.Engine.BattleTest do
   alias UaiShot.Engine.Battle
   alias UaiShot.Store.{Bullet, Player, Ranking}
   alias UaiShotWeb.GameChannel
+  alias UaiShotWeb.UserSocket
 
   setup do
     Bullet.reset([])
@@ -11,7 +12,8 @@ defmodule UaiShot.Engine.BattleTest do
     Ranking.clean()
 
     {:ok, _, socket} =
-      socket("1", %{player_id: 1})
+      UserSocket
+      |> socket("1", %{player_id: 1})
       |> subscribe_and_join(GameChannel, "game:lobby")
 
     [socket: socket]

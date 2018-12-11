@@ -3,6 +3,7 @@ defmodule UaiShotWeb.GameChannelTest do
 
   alias UaiShot.Store.{Bullet, Player, Ranking}
   alias UaiShotWeb.GameChannel
+  alias UaiShotWeb.UserSocket
 
   setup do
     Bullet.reset([])
@@ -10,14 +11,15 @@ defmodule UaiShotWeb.GameChannelTest do
     Ranking.clean()
 
     {:ok, _, socket} =
-      socket("10", %{player_id: 10, nickname: "John"})
+      UserSocket
+      |> socket("10", %{player_id: 10, nickname: "John"})
       |> subscribe_and_join(GameChannel, "game:lobby")
 
     [socket: socket]
   end
 
-  test "push new_player event", context do
-    push(context.socket, "new_player", %{"rotation" => 0, "x" => 400, "y" => 30})
+  test "push new_player event", %{socket: socket} do
+    push(socket, "new_player", %{"rotation" => 0, "x" => 400, "y" => 30})
 
     assert_broadcast(
       "update_players",
@@ -35,8 +37,8 @@ defmodule UaiShotWeb.GameChannelTest do
     )
   end
 
-  test "push move_player event", context do
-    push(context.socket, "move_player", %{"rotation" => 0, "x" => 600, "y" => 40})
+  test "push move_player event", %{socket: socket} do
+    push(socket, "move_player", %{"rotation" => 0, "x" => 600, "y" => 40})
 
     assert_broadcast(
       "update_players",
@@ -44,8 +46,8 @@ defmodule UaiShotWeb.GameChannelTest do
     )
   end
 
-  test "push shoot_bullet event", context do
-    push(context.socket, "shoot_bullet", %{
+  test "push shoot_bullet event", %{socket: socket} do
+    push(socket, "shoot_bullet", %{
       "rotation" => 0.5235987755982988,
       "speed_x" => 17.320508075688775,
       "speed_y" => 9.999999999999998,
