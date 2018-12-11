@@ -14,7 +14,6 @@ defmodule UaiShotWeb.Router do
   end
 
   scope "/", UaiShotWeb do
-    # Use the default browser stack
     pipe_through(:browser)
 
     get("/", PageController, :index)

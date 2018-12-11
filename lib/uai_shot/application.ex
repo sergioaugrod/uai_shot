@@ -1,7 +1,5 @@
 defmodule UaiShot.Application do
-  @moduledoc """
-  Set the application.
-  """
+  @moduledoc false
 
   use Application
 
@@ -12,15 +10,13 @@ defmodule UaiShot.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   def start(_type, _args) do
-    import Supervisor.Spec
-
-    # Define workers and child supervisors to be supervised
+    # List all child processes to be supervised
     children = [
-      supervisor(Endpoint, []),
-      worker(Bullet, []),
-      worker(Player, []),
-      worker(Ranking, []),
-      worker(GameServer, [])
+      Endpoint,
+      {Bullet, []},
+      {Player, %{}},
+      {Ranking, %{}},
+      {GameServer, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

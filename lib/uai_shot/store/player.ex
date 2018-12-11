@@ -8,9 +8,9 @@ defmodule UaiShot.Store.Player do
   @doc """
   Start Store.
   """
-  @spec start_link() :: :ok
-  def start_link do
-    Agent.start_link(fn -> %{} end, name: __MODULE__)
+  @spec start_link(Map.t()) :: :ok
+  def start_link(state \\ %{}) do
+    Agent.start_link(fn -> state end, name: __MODULE__)
   end
 
   @doc """
@@ -57,7 +57,6 @@ defmodule UaiShot.Store.Player do
     Agent.update(__MODULE__, fn _ -> %{} end)
   end
 
-  @spec default_attrs(String.t()) :: Map.t()
   defp default_attrs(player_id) do
     %{id: player_id, nickname: player_id}
   end
