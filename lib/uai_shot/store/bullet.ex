@@ -8,7 +8,7 @@ defmodule UaiShot.Store.Bullet do
   @doc """
   Start Store.
   """
-  @spec start_link(Keyword.t()) :: :ok
+  @spec start_link(List.t()) :: :ok
   def start_link(state \\ []) do
     Agent.start_link(fn -> state end, name: __MODULE__)
   end
