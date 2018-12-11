@@ -12,14 +12,14 @@ export class Player {
     }
 
     _movePlayer(channel) {
-        channel.push("move_player", { x: this.sprite.x, y: this.sprite.y, rotation: this.sprite.rotation });
+        channel.push('move_player', { x: this.sprite.x, y: this.sprite.y, rotation: this.sprite.rotation });
     }
 
     _shootBullet(channel) {
         let speedX = Math.cos(this.sprite.rotation) * 20;
         let speedY = Math.sin(this.sprite.rotation) * 20;
 
-        channel.push("shoot_bullet", { x: this.sprite.x, y: this.sprite.y, rotation: this.sprite.rotation, speed_x: speedX, speed_y: speedY });
+        channel.push('shoot_bullet', { x: this.sprite.x, y: this.sprite.y, rotation: this.sprite.rotation, speed_x: speedX, speed_y: speedY });
     }
 
     _checkCursors(cursors, game) {

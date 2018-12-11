@@ -5,11 +5,7 @@ defmodule UaiShotWeb.UserSocket do
   # channel "room:*", UaiShotWeb.RoomChannel
   channel("game:lobby", UaiShotWeb.GameChannel)
 
-  ## Transports
-  transport(:websocket, Phoenix.Transports.WebSocket)
-  # transport :longpoll, Phoenix.Transports.LongPoll
-
-  def connect(params, socket) do
+  def connect(params, socket, _connect_info) do
     player_id = get_player_id(params["player_id"])
     nickname = get_nickname(params["nickname"])
 

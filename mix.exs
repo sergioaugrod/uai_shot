@@ -1,4 +1,4 @@
-defmodule UaiShot.Mixfile do
+defmodule UaiShot.MixProject do
   use Mix.Project
 
   def project do
@@ -33,13 +33,14 @@ defmodule UaiShot.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:credo, "~> 0.10", only: [:dev, :test], runtime: false},
-      {:cowboy, "~> 1.0"},
+      {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
       {:distillery, "~> 2.0"},
-      {:phoenix, "~> 1.3.4"},
-      {:phoenix_html, "~> 2.12"},
-      {:phoenix_live_reload, "~> 1.1.6", only: :dev},
+      {:jason, "~> 1.0"},
+      {:phoenix, "~> 1.4.0"},
+      {:phoenix_html, "~> 2.11"},
+      {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_pubsub, "~> 1.1"},
+      {:plug_cowboy, "~> 2.0"},
       {:uuid, "~> 1.1"}
     ]
   end

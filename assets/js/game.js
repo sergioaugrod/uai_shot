@@ -1,5 +1,5 @@
-import {Player} from "./player";
-import {Socket} from "phoenix";
+import {Player} from './player';
+import {Socket} from 'phoenix';
 
 export class Game {
     constructor(engine, nickname) {
@@ -20,16 +20,16 @@ export class Game {
     }
 
     preload(state) {
-        this.engine.load.image("bullet", "images/bullet.png");
-        this.engine.load.image("ship", "images/ship.png");
-        this.engine.load.image("ship-enemy", "images/ship-enemy.png");
-        this.engine.load.image("space", "images/space.png");
-        this.engine.load.image("trophy", "images/trophy.png");
+        this.engine.load.image('bullet', 'images/bullet.png');
+        this.engine.load.image('ship', 'images/ship.png');
+        this.engine.load.image('ship-enemy', 'images/ship-enemy.png');
+        this.engine.load.image('space', 'images/space.png');
+        this.engine.load.image('trophy', 'images/trophy.png');
         this._connectToLobby();
     }
 
     create(state) {
-        this.engine.add.tileSprite(0, 0, 800, 600, "space");
+        this.engine.add.tileSprite(0, 0, 800, 600, 'space');
         this._setTexts();
         this._setKeyboard(state);
         this._createPlayer();
@@ -44,9 +44,9 @@ export class Game {
     }
 
     _setTexts() {
-        this.ranking = this.engine.add.text(38, 10, "", { font: "14px Arial", fill: "#fff" });
-        this.engine.add.sprite(10, 6, "trophy");
-        this.playersOnline = this.engine.add.text(10, 580, "", { font: "14px Arial", fill: "#F4D03F" });
+        this.ranking = this.engine.add.text(38, 10, '', { font: '14px Arial', fill: '#fff' });
+        this.engine.add.sprite(10, 6, 'trophy');
+        this.playersOnline = this.engine.add.text(10, 580, '', { font: '14px Arial', fill: '#F4D03F' });
     }
 
     _updateAlpha() {
@@ -67,14 +67,14 @@ export class Game {
     }
 
     _createPlayer() {
-        let sprite = this._createShip(400, 30, "ship", 0);
+        let sprite = this._createShip(400, 30, 'ship', 0);
         sprite.body.collideWorldBounds = true;
         this.player = new Player(sprite);
-        this.channel.push("new_player", { x: sprite.x, y: sprite.y, rotation: sprite.rotation });
+        this.channel.push('new_player', { x: sprite.x, y: sprite.y, rotation: sprite.rotation });
     }
 
     _createNicknameText(x, y, nickname) {
-        return this.engine.add.text(x, y, nickname, { font: "10px Arial", fill: "#F4D03F" });
+        return this.engine.add.text(x, y, nickname, { font: '10px Arial', fill: '#F4D03F' });
     }
 
     _createShip(x, y, type, rotation) {
@@ -89,10 +89,10 @@ export class Game {
     }
 
     _updatePlayers() {
-        this.channel.on("update_players", payload => {
+        this.channel.on('update_players', payload => {
             payload.players.forEach(player => {
                 if(!this.players[player.id] && player.id != this.playerId) {
-                    this.players[player.id] = this._createShip(player.x, player.y, "ship-enemy", player.rotation);
+                    this.players[player.id] = this._createShip(player.x, player.y, 'ship-enemy', player.rotation);
                     this.players[player.id].text = this._createNicknameText(player.x, player.y-25, player.nickname.substring(0, 8));
                 }
 
@@ -129,13 +129,13 @@ export class Game {
     }
 
     _updateBullets() {
-        this.channel.on("update_bullets", payload => {
+        this.channel.on('update_bullets', payload => {
             payload.bullets.forEach((bullet, index) => {
                 if(this.bullets[index]) {
                     this.bullets[index].x = bullet.x;
                     this.bullets[index].y = bullet.y;
                 } else {
-                    this.bullets[index] = this.engine.add.sprite(bullet.x, bullet.y, "bullet");
+                    this.bullets[index] = this.engine.add.sprite(bullet.x, bullet.y, 'bullet');
                 }
             });
 
@@ -148,7 +148,7 @@ export class Game {
     }
 
     _updateRanking() {
-        this.channel.on("update_ranking", payload => {
+        this.channel.on('update_ranking', payload => {
             let rankingText = payload.ranking
                 .map(position => {
                     if(position.player_id == this.playerId) {
@@ -156,14 +156,14 @@ export class Game {
                     } else {
                         return `${position.nickname.substring(0, 8)}: ${position.value}`;
                     }
-                }).join("\n");
+                }).join('\n');
 
             this.ranking.text = rankingText;
         });
     }
 
     _hitPlayer() {
-        this.channel.on("hit_player", payload => {
+        this.channel.on('hit_player', payload => {
             if(this.playerId != payload.player_id) {
                 this.players[payload.player_id].alpha = 0;
             } else {
@@ -173,12 +173,12 @@ export class Game {
     }
 
     _connectToLobby() {
-        let socket = new Socket("/socket", { params: { nickname: this.nickname, player_id: this.playerId } });
+        let socket = new Socket('/socket', { params: { nickname: this.nickname, player_id: this.playerId } });
         socket.connect();
-        let channel = socket.channel("game:lobby", {});
+        let channel = socket.channel('game:lobby', {});
         channel
             .join()
-            .receive("ok", payload => this.playerId = payload.player_id);
+            .receive('ok', payload => this.playerId = payload.player_id);
         this.channel = channel;
     }
 }

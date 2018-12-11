@@ -8,9 +8,9 @@ defmodule UaiShot.Store.Player do
   @doc """
   Start Store.
   """
-  @spec start_link() :: :ok
-  def start_link do
-    Agent.start_link(fn -> %{} end, name: __MODULE__)
+  @spec start_link(Map.t()) :: :ok
+  def start_link(state \\ %{}) do
+    Agent.start_link(fn -> state end, name: __MODULE__)
   end
 
   @doc """
