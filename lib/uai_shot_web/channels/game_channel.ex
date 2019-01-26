@@ -66,7 +66,6 @@ defmodule UaiShotWeb.GameChannel do
     broadcast(socket, "update_ranking", %{ranking: Ranking.all()})
   end
 
-  @spec format_state(Map.t()) :: Map.t()
   defp format_state(state) do
     for {key, val} <- state, into: %{}, do: {String.to_atom(key), val}
   end

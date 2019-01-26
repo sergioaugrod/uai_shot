@@ -2,7 +2,6 @@ defmodule UaiShotWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", UaiShotWeb.RoomChannel
   channel("game:lobby", UaiShotWeb.GameChannel)
 
   def connect(params, socket, _connect_info) do
@@ -19,12 +18,10 @@ defmodule UaiShotWeb.UserSocket do
 
   def id(socket), do: "users_socket:#{socket.assigns.player_id}"
 
-  @spec get_player_id(String.t()) :: String.t()
   defp get_player_id(player_id) do
     if player_id, do: player_id, else: UUID.uuid4()
   end
 
-  @spec get_nickname(String.t()) :: String.t()
   defp get_nickname(nickname) do
     if nickname && String.first(nickname), do: nickname, else: UUID.uuid4()
   end
