@@ -10,6 +10,7 @@ defmodule UaiShot.MixProject do
       compilers: [:phoenix] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
+      releases: releases(),
       deps: deps()
     ]
   end
@@ -49,6 +50,14 @@ defmodule UaiShot.MixProject do
   defp aliases do
     [
       test: ["test"]
+    ]
+  end
+
+  defp releases do
+    [
+      uai_shot: [
+        include_executables_for: [:unix]
+      ]
     ]
   end
 end

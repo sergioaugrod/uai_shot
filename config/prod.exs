@@ -10,11 +10,9 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :uai_shot, UaiShotWeb.Endpoint,
-  url: [host: "example.com", port: 80],
   check_origin: false,
   cache_static_manifest: "priv/static/cache_manifest.json",
-  server: true,
-  secret_key_base: "${SECRET_KEY_BASE}"
+  server: true
 
 # Do not print debug messages in production
 config :logger, level: :info
@@ -52,21 +50,3 @@ config :logger, level: :info
 #       force_ssl: [hsts: true]
 #
 # Check `Plug.SSL` for all available options in `force_ssl`.
-
-# ## Using releases (distillery)
-#
-# If you are doing OTP releases, you need to instruct Phoenix
-# to start the server for all endpoints:
-#
-#     config :phoenix, :serve_endpoints, true
-#
-# Alternatively, you can configure exactly which server to
-# start per endpoint:
-#
-#     config :uai_shot, UaiShotWeb.Endpoint, server: true
-#
-# Note you can't rely on `System.get_env/1` when using releases.
-# See the releases documentation accordingly.
-
-# Finally import the config/prod.secret.exs which should be versioned
-# separately.
